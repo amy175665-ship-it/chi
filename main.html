@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 계산기</title>
+    <style>
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-image: url(./);
+        background-size: cover;
+    }
+    
+    /* ------------------ 계산기 몸통 ------------------ */
+    .background {
+        width: 350px;
+        background: linear-gradient(0deg,rgba(90, 87, 171, 1) 9%, rgba(147, 145, 255, 1) 42%, rgba(157, 156, 255, 1) 67%, rgba(255, 255, 255, 1) 100%);
+        border-radius: 30px; 
+
+        padding: 20px 20px 50px 20px;
+        box-shadow: 3px 3px 49px rgb(255, 255, 255);
+
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    /* ------------------ 숫자 출력창------------------ */
+    #dis {
+        color: rgb(49, 56, 160);
+        width: 90%; 
+        height: 80px;
+        border-radius: 15px; 
+        background-color: rgb(255, 255, 255);
+        
+        display: flex;
+        justify-content: flex-end; 
+        align-items: center; 
+        
+        padding: 0 20px; 
+        box-sizing: border-box;
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 30px; 
+    }
+    
+   /* ------------------ 버튼들의 레이아웃------------------ */
+    .outBox {
+        width: 90%;
+        display: flex;
+        flex-direction: column; 
+        gap: 16px; 
+    }
+
+   
+    .btnBox {
+        display: flex;
+        justify-content: space-between; 
+    }
+
+    /* ------------------ 버튼들 디자인------------------ */
+    .btnBox div {
+        width: 60px; 
+        height: 60px;
+        font-weight: bold;
+        font-size: 15px;
+        border-radius: 50%;
+        
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* ------------------ 버튼 색상------------------ */
+    .box1 { 
+        background-color: rgb(49, 56, 160); 
+        color: rgb(255, 255, 255); 
+        box-shadow: 0 6px 0 rgb(16, 20, 66); 
+    }
+
+    .box2 { 
+        background-color: rgb(255, 255, 255); 
+        color: rgb(49, 56, 160); 
+        box-shadow: 0 6px 0 rgb(175, 175, 175);
+    }
+
+    /* ------------------ 마우스를 올렸을 때 효과 ------------------ */
+    .box1:hover {
+        background-color: rgb(46, 49, 90); 
+    }
+    .box2:hover {
+        background-color: rgba(255, 255, 255, 0.658); /
+    }
+    .btnBox div {
+        transition: background-color 0.2s ease; 
+    }
+
+    
+</style>
+</head>
+<body>
+    <div class ="background">
+        <div id = "dis" >0</div>
+        
+      
+        <div class = "outBox">
+            <div class="btnBox">
+                <div class = "box1" data-num="7">7</div>
+                <div class = "box1" data-num="8">8</div>
+                <div class = "box1" data-num="9">9</div>
+                <div class = "box1" data-num="clear">clear</div>
+            </div>
+            
+            <div class="btnBox">
+                <div class = "box2" data-num="4">4</div>
+                <div class = "box2" data-num="5">5</div>
+                <div class = "box2" data-num="6">6</div>
+                <div class = "box2" data-num="back">back</div>
+            </div>
+
+            <div class="btnBox">
+                <div class = "box2" data-num="1">1</div>
+                <div class = "box2" data-num="2">2</div>
+                <div class = "box2" data-num="3">3</div>
+                <div class = "box1" data-num="=">=</div>
+            </div>
+
+            <div class="btnBox">
+                <div class = "box2" data-num="0">0</div>
+                <div class = "box2" data-num="00">00</div>
+                <div class = "box2" data-num="@">❤</div>  
+                <div class = "box2" data-num="+">+</div>
+            </div>
+
+            <div class="btnBox">
+                <div class = "box2" data-num=".">.</div>
+                <div class = "box2" data-num="*">x</div>
+                <div class = "box2" data-num="/">/</div> 
+                <div class = "box2" data-num="-">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       
+        const boxs = document.querySelectorAll(".btnBox div")
+        const dis = document.querySelector("#dis")
+        let expr = ''
+
+
+         // :: boxs.forEach((item) => { ... }) :: 누군가 너를 클릭하면 이 행동을 해!
+            boxs.forEach((item) => {
+        
+           
+            item.addEventListener("click", () => {
+                let v = item.dataset.num
+                if(!v) return; 
+
+                if (v === "clear") { expr = ''; dis.innerHTML = '0'; return; }
+
+                if (v === "back") { expr = expr.slice(0, -1); dis.innerHTML = expr === '' ? '0' : expr; return; }
+                
+                if (v === "+" || v === "-") {
+                    if (expr === '' || expr.endsWith("+") || expr.endsWith("-")) return;
+                }
+
+                if (v === "=") {
+                    if (expr === '' || expr.endsWith("+") || expr.endsWith("-")) {
+                        dis.innerHTML = 'error'; expr = ''; return;
+                    }
+                    let ans = eval(expr); 
+                    dis.innerHTML = Number(ans).toLocaleString();
+                    expr = String(ans);
+                    return;
+                }
+                if (v === "@") { expr = ''; dis.innerHTML = 'hello~~~~❤'; return; }
+                expr += v;
+                dis.innerHTML = expr;
+            })
+        })
+    </script>
+</body>
+</html>
